@@ -54,3 +54,10 @@ def logout(request):
         request.user.auth_token.delete()
         return Response({'message': 'Sesión cerrada correctamente'}, status=status.HTTP_200_OK)
     return Response({'error': 'Usuario no autenticado'}, status=status.HTTP_401_UNAUTHORIZED)
+
+@api_view(['GET'])
+def perfil(request):
+    if request.user.is_authenticated:
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)
+    return Response({'error': 'No autenticado'}, status=401)
