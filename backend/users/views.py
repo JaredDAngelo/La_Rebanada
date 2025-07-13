@@ -7,6 +7,23 @@ from django.contrib.auth import authenticate
 from .models import User
 from .serializers import RegisterSerializer, UserSerializer
 
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def perfil(request):
+    usuario = request.user
+    return Response({
+        'id': usuario.id,
+        'email': usuario.email,
+        'nombre': usuario.nombre,
+        'es_staff': usuario.is_staff,
+        'activo': usuario.is_active,
+        'creado_en': usuario.creado_en
+    })
+
 @api_view(['POST'])
 def register(request):
     serializer = RegisterSerializer(data=request.data)
